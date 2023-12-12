@@ -3,7 +3,7 @@
  * https://docs.expo.io/guides/color-schemes/
  */
 
-import { Text as DefaultText, useColorScheme, View as DefaultView } from 'react-native';
+import { Text as DefaultText, useColorScheme, View as DefaultView, Button as DefaultButton, TouchableOpacity, StyleProp, ViewStyle, TextStyle} from 'react-native';
 
 import Colors from '../constants/Colors';
 
@@ -12,8 +12,19 @@ type ThemeProps = {
   darkColor?: string;
 };
 
+interface ButtonProps {
+  title: string;
+  onPress: () => void;
+  style?: StyleProp<ViewStyle>;
+  textStyle?: StyleProp<TextStyle>;
+  lightColor?: string;
+  darkColor?: string;
+}
+
+
 export type TextProps = ThemeProps & DefaultText['props'];
 export type ViewProps = ThemeProps & DefaultView['props'];
+
 
 export function useThemeColor(
   props: { light?: string; dark?: string },
@@ -42,3 +53,19 @@ export function View(props: ViewProps) {
 
   return <DefaultView style={[{ backgroundColor }, style]} {...otherProps} />;
 }
+
+
+export function Button(props: ButtonProps) {
+  const { title, onPress, style, textStyle, lightColor, darkColor, ...otherProps } = props;
+  const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'background');
+
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      style={[{ backgroundColor }, style]}
+      {...otherProps}
+    >
+      <Text style={textStyle}>{title}</Text>
+    </TouchableOpacity>
+  );
+};
